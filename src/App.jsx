@@ -37,8 +37,8 @@ function App() {
           <Route exact path="*" element={<>NOT FOUND</>}/>
 
 
-        <Route element={<AuthGuard/>}>
-        </Route>
+        {/* <Route element={<AuthGuard/>}>
+        </Route> */}
           <Route path="/dashboard" element={<Dashboard />}/>
           <Route exact path="/usuarios" element={<Usuarios />}/>
           <Route exact path="/usuarios/form" element={<UsuariosForm />}/>
