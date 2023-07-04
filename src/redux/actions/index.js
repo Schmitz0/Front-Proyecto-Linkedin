@@ -37,7 +37,7 @@ export const GET_GRAFICO_INSUMO_CANTIDAD = "GET_GRAFICO_INSUMO_CANTIDAD";
 export const GET_INSUMO_CONTROL = "GET_INSUMO_CONTROL";
 export const  POST_STOCK_HISTORIAL =" POST_STOCK_HISTORIAL"
 
-const app = "https://api-esencial-production.up.railway.app";
+const app = "https://back-proyect-linkedin-production.up.railway.app/";
 // const app = "http://localhost:3001";
 
 // const token = localStorage.getItem('token');
