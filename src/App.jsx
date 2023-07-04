@@ -9,7 +9,6 @@ import InsumosForm from "./components/InsumosForm/InsumosForm.jsx";
 import InsumosFormId from "./components/InsumosForm/InsumosFormId.jsx";
 import ProveedoresFormId from "./components/ProveedoresForm/ProveedoresFormId.jsx";
 import Usuarios from "./components/Usuarios/Usuarios.jsx";
-import RegistroUsuario from "./components/RegistroUsuario/RegistroUsuario.jsx";
 import UsuariosForm from "./components/UsuariosForm/UsuariosForm.jsx";
 import UsuariosFormEdit from "./components/UsuariosForm/UsuariosFormEdit.jsx";
 import FormReceta from "./components/FormReceta/FormReceta.jsx";
@@ -26,7 +25,6 @@ import Proyeccion from "./components/Proyeccion/Proyeccion.jsx";
 import StockHistorial from "./components/StockHistorial/StockHistorial.jsx"
 import MiPerfil from "./components/MiPerfil/MiPerfil.jsx";
 import AuthGuard from "./AuthGuard/AuthGuard.jsx";
-
  
 
 function App() {
@@ -38,10 +36,10 @@ function App() {
           <Route exact path="/" element={<LoginScreen />}/>
           <Route exact path="*" element={<>NOT FOUND</>}/>
 
+
         <Route element={<AuthGuard/>}>
           <Route path="/dashboard" element={<Dashboard />}/>
           <Route exact path="/usuarios" element={<Usuarios />}/>
-          <Route exact path="/usuarios/registro/:id" element={<RegistroUsuario />}/>
           <Route exact path="/usuarios/form" element={<UsuariosForm />}/>
           <Route exact path="/usuarios/form/:id" element={<UsuariosFormEdit />}/>
           <Route exact path="/graficos" element={<Graficos />}/>

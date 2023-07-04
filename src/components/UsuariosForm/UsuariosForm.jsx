@@ -4,10 +4,8 @@ import { Link, useNavigate } from "react-router-dom"
 import { emailRegex } from '../../helpers/helpers.js';
 import { postUsuario, getAllUsuarios } from "../../redux/actions";
 import NavBar from "../NavBar/NavBar"
-import NavBarDashboard from "../NavBarDashboard/NavBarDashboard"
-import style from "../UsuariosForm/UsuariosForm.module.css"
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { OutlinedInput, Button, TextField, Select, MenuItem, Box, FormControl } from '@mui/material';
+import style from "../ProveedoresForm/ProveedoresForm.module.css"
+import { OutlinedInput, Button, TextField, Select, MenuItem, Box, Typography, FormControl } from '@mui/material';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -87,21 +85,25 @@ const UsuariosForm = () => {
 			<div >
 				<div >
 					<NavBar />
-					<NavBarDashboard />
-
 
 					<form onSubmit={HandleSubmit}>
 						<FormControl sx={{ m: 1.5, alignItems: 'center' }}>
-						
+							<div>
+								<Typography
+									textAlign='center'
+									sx={{
+										m: 2,
+										display: { xs: 'none', md: 'flex' },
+										fontFamily: 'roboto',
+										fontWeight: 700,
+										color: 'inherit',
+										textDecoration: 'none',
+									}}
+								>
+									Crea un nuevo usuario
+								</Typography>
+							</div>
 							<div className={style.selectContainer}>
-
-								<Link to={'/usuarios'} style={{ textDecoration: 'none' }}>
-									<Button>
-										<ArrowBackIcon /> Atrás 
-									</Button>
-								</Link> 
-								<br/>
-                <br/>
 
 								<Box>
 									<TextField

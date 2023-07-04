@@ -89,7 +89,6 @@ return (
 
                 margin="dense"
                 label="Cantidad"
-                type="number"
                 fullWidth
                 variant="standard"
                 name="cantidad"

@@ -1,5 +1,4 @@
 import {
-  POST_REGISTRO_USUARIO,
   SET_NAV_BAR,
   POST_PROYECCION,
   GET_GRAFICO_INSUMO_CANTIDAD,
@@ -35,7 +34,6 @@ const initialState = {
   insumosProyectados: [],
   stockPrice: [],
   usuarios: [],
-  registroUsuario: [],
   proveedores: [],
   recetas: [],
   recetaDetalle: [],
@@ -170,11 +168,6 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         insumosProyectados: action.payload,
-      };
-    case POST_REGISTRO_USUARIO:
-      return {
-        ...state,
-        registroUsuario: action.payload,
       };
     case GET_NULL:
       return {

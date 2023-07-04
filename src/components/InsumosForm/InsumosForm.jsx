@@ -1,14 +1,13 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import { postInsumo, getAllInsumos, getAllProveedores } from '../../redux/actions';
 import NavBar from '../NavBar/NavBar';
 import style from '../InsumosForm/InsumosForm.module.css';
-import { OutlinedInput, Button, TextField, Select, MenuItem, Box, FormControl } from '@mui/material';
+import { OutlinedInput, Button, TextField, Select, MenuItem, Box, Typography, FormControl, InputLabel } from '@mui/material';
 import swal from 'sweetalert';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -29,9 +28,11 @@ const InsumosForm = () => {
 
   useEffect(() => {
     dispatch(getAllInsumos());
-    dispatch(getAllProveedores());
   }, [dispatch]);
 
+  useEffect(() => {
+    dispatch(getAllProveedores());
+  }, [dispatch]);
 
   const insumosGlobal = useSelector((state) => state.insumos);
   const proveedoresGlobal = useSelector((state) => state.proveedores);
@@ -44,8 +45,6 @@ const InsumosForm = () => {
 
   const proveedores = proveedoresGlobal.map((e) => e.nombre);
 
-const [submitted, setSubmitted] = useState(false);
-const [formValid, setFormValid] = useState(false);
   const [input, setInput] = useState({
     nombre: '',
     precio: '',
@@ -60,45 +59,32 @@ const [formValid, setFormValid] = useState(false);
 
   const handleChange = (event) => {
     event.preventDefault();
-    const { name, value } = event.target;
-    if (name === 'precio' || name === 'stock' || name === 'StockCritico') {
-      const number = value;
-      setInput((prevInput) => ({
-        ...prevInput,
-        [name]: number,
-      }));
+    if (event.target.name === 'precio' || event.target.name === 'stock') {
+      const number = event.target.value;
+      setInput({
+        ...input,
+        [event.target.name]: number,
+      });
     } else {
-      setInput((prevInput) => ({
-        ...prevInput,
-        [name]: value,
-      }));
-    }
-    if (name === 'nombre' || name === 'stock' || name === 'precio' || name === 'StockCritico') {
-      if (value.trim() !== '') {
-        setFormValid(true);
-      } else {
-        setFormValid(false);
-      }
+      setInput({
+        ...input,
+        [event.target.name]: event.target.value,
+      });
     }
   };
 
   const HandleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    dispatch(postInsumo(input));
+    swal({
+      position: 'top-end',
+      icon: 'success',
+      title: 'Insumo creado correctamente',
+      button: true,
+    }).then(() => {
+      navigate('/insumos');
+    });
 
-    const areAllFieldsComplete = input.nombre.trim() !== '' && input.stock.trim() !== '' && input.precio.trim() !== '' && input.stockCritico.trim() !== '';
-  
-    if (formValid && areAllFieldsComplete) {
-      dispatch(postInsumo(input));
-      swal({
-        position: 'top-end',
-        icon: 'success',
-        title: 'Insumo creado correctamente',
-        button: true,
-      }).then(() => {
-        navigate('/insumos');
-      });
-    } 
   };
 
   return (
@@ -106,84 +92,80 @@ const [formValid, setFormValid] = useState(false);
       <div>
         <div>
           <NavBar />
-
-          <Link to={'/insumos'} style={{ textDecoration: 'none' }}>
-            <Button>
-              <ArrowBackIcon /> Atrás 
-            </Button>
-          </Link> 
-
           <form onSubmit={HandleSubmit}>
-
-
-
             <FormControl sx={{ m: 1.5, alignItems: 'center' }}>
-             
+              <div>
+                <Typography
+                  textAlign="center"
+                  sx={{
+                    m: 2,
+                    fontFamily: 'roboto',
+                    fontWeight: 700,
+                    color: 'inherit',
+                    textDecoration: 'none',
+                  }}
+                >
+                  Crear nuevo insumo
+                </Typography>
+              </div>
               <div className={style.selectContainer}>
-                <Box >
-
-                <TextField
-                  sx={{ m: 1, width: 300 }}
-                  name="nombre"
-                  variant="outlined"
-                  label="Insumo"
-                  onChange={handleChange}
-                  value={input.nombre}
-                  error={submitted && input.nombre === ''}
-                  helperText={submitted && input.nombre === '' ? 'Este campo es requerido' : ''}
-                />
+                <Box>
 
                   <TextField
                     sx={{ m: 1, width: 300 }}
-                    inputProps={{ min: 0 }}
+                    required
+                    name="nombre"
+                    variant="outlined"
+                    placeholder="Insumo..."
+                    label="Insumo..."
+                    onChange={handleChange}
+                    value={input.nombre}
+                  />
+
+                  <TextField
+                    sx={{ m: 1, width: 300 }}
+                    required
                     name="precio"
                     type='number'
                     variant="outlined"
-                    label="Precio"
+                    placeholder="Precio..."
                     onChange={handleChange}
                     value={input.precio}
-                    error={submitted && input.precio === ''}
-                  helperText={submitted && input.precio === '' ? 'Este campo es requerido' : ''}
                   />
 
                   <TextField
                     sx={{ m: 1, width: 300 }}
-                    inputProps={{ min: 0 }}
+                    required
                     name="stock"
                     type='number'
                     variant="outlined"
-                    label="Stock"
+                    placeholder="Stock..."
                     onChange={handleChange}
                     value={input.stock}
-                    error={submitted && input.stock === ''}
-                  helperText={submitted && input.stock === '' ? 'Este campo es requerido' : ''} 
                   />
                   <TextField
                     sx={{ m: 1, width: 300 }}
-                    inputProps={{ min: 0 }}
+                    required
                     name="stockCritico"
                     type='number'
                     variant="outlined"
-                    label="Stock Critico"
+                    placeholder="Stock Critico..."
                     onChange={handleChange}
                     value={input.stockCritico}
-                    error={submitted && input.stockCritico === ''}
-                    helperText={submitted && input.stockCritico === '' ? 'Este campo es requerido' : ''}
                   />
                   <FormControl>
                     <Select
-                      sx={{ m: 1, width: 300 }}
+                      sx={{ m: 1, width: 300, height: '100%' }}
                       displayEmpty
                       name="unidad"
-                      label="Unidades de medida"
                       value={input.unidad}
                       onChange={handleChange}
                       input={<OutlinedInput />}
                       MenuProps={MenuProps}
                       inputProps={{ 'aria-label': 'Without label' }}
                     >
-                      <MenuItem  disabled value="">
-                        <span label="Unidades de medida">Unidades de medida</span>
+                      <MenuItem disabled value="">
+                        <span>Unidades de medida</span>
                       </MenuItem>
                       {unidades?.map((e, i) => (
                         <MenuItem key={i} value={e}>
@@ -195,7 +177,7 @@ const [formValid, setFormValid] = useState(false);
 
                   <FormControl>
                     <Select
-                      sx={{ m: 1, width: 300 }}
+                      sx={{ m: 1, width: 300, height: '100%' }}
                       displayEmpty
                       name="categoria"
                       value={input.categoria}
@@ -205,7 +187,7 @@ const [formValid, setFormValid] = useState(false);
                       inputProps={{ 'aria-label': 'Without label' }}
                     >
                       <MenuItem disabled value="">
-                        Categorias
+                        <span>Categorias</span>
                       </MenuItem>
                       {categorias?.map((e, i) => (
                         <MenuItem key={i} value={e}>
@@ -217,7 +199,7 @@ const [formValid, setFormValid] = useState(false);
 
                   <FormControl>
                     <Select
-                      sx={{ m: 1, width: 300 }}
+                      sx={{ m: 1, width: 300, height: '100%' }}
                       displayEmpty
                       name="proveedor"
                       value={input.proveedor}
@@ -227,7 +209,7 @@ const [formValid, setFormValid] = useState(false);
                       inputProps={{ 'aria-label': 'Without label' }}
                     >
                       <MenuItem disabled value="">
-                        Elegir proveedor
+                        <span>Elegir proveedor</span>
                       </MenuItem>
                       {proveedores?.map((e, i) => (
                         <MenuItem key={i} value={e}>
@@ -239,6 +221,7 @@ const [formValid, setFormValid] = useState(false);
 
                   <TextField
                     sx={{ m: 1, width: 300 }}
+                    required
                     name="descripcion"
                     variant="outlined"
                     placeholder="Descripcion..."
@@ -250,21 +233,21 @@ const [formValid, setFormValid] = useState(false);
                   />
 
 
-                  {/* <TextField
+                  <TextField
                     sx={{ m: 1, width: 300 }}
+
                     name="imagen"
                     variant="outlined"
                     placeholder="Imagen..."
                     multiline
                     onChange={handleChange}
                     value={input.imagen}
-                  /> */}
+                  />
                 </Box>
               </div>
 
               <div className={style.botonContainer}>
                 <Button
-                  // disabled={!input.nombre || !input.precio || !input.stock || !input.stockCritico }
                   className={style.boton}
                   type="submit"
                   sx={{
@@ -281,7 +264,7 @@ const [formValid, setFormValid] = useState(false);
                     },
                   }}
                 >
-                  Crear nuevo insumo
+                  Ingresar nuevo insumo
                 </Button>
               </div>
             </FormControl>

@@ -2,14 +2,13 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import style from '../Proveedores/Proveedores.module.css';
-import { deleteProveedor, getAllProveedores } from '../../redux/actions';
+import { getAllProveedores } from '../../redux/actions';
 import NavBar from '../NavBar/NavBar';
 import { IconButton, Button, Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, tableCellClasses, Grid } from '@mui/material';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import Proveedor from '../Proveedor/Proveedor';
-import DeleteIcon from "@mui/icons-material/Delete";
 
 const Proveedores = () => {
   const ITEM_HEIGHT = 48;
@@ -39,27 +38,6 @@ const Proveedores = () => {
   useEffect(() => {
     dispatch(getAllProveedores());
   }, [dispatch]);
-
-  const handlerClickDelete = (e) => {
-    swal({
-      title: "¿Está seguro?",
-      text: `Esta función borrará al proveedor ${e.nombre} en forma permanente`,
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        dispatch(deleteProveedor(e.id)).then(() => {
-          dispatch(getAllProveedores());
-        });
-        swal(`El proveedor ${e.nombre} de id ${e.id} ha sido borrado`, {
-          icon: "success",
-        });
-      } else {
-        swal(`El proveedor ${e.nombre} de id ${e.id} NO fue borrado`);
-      }
-    });
-  };
 
   return (
     <>
@@ -100,8 +78,9 @@ const Proveedores = () => {
                     <StyledTableCell>Dirección</StyledTableCell>
                     <StyledTableCell>Código Postal</StyledTableCell>
                     <StyledTableCell>Descripcion</StyledTableCell>
-                    <StyledTableCell sx={{maxWidth:"25px"}}>Editar</StyledTableCell>
-                    <StyledTableCell >Borrar</StyledTableCell>
+                    <StyledTableCell
+                    sx={{maxWidth:"25px"}}
+                    >Editar</StyledTableCell>
                   </TableRow>
                 </TableHead>
 
@@ -137,17 +116,6 @@ const Proveedores = () => {
                             <ModeEditIcon />
                           </IconButton>
                         </Link>
-                      </StyledTableCell>
-                      <StyledTableCell 
-                      sx={{maxWidth:"25px"}}
-                      align="left">
-                        <IconButton
-                          onClick={() => handlerClickDelete(e, i)}
-                          sx={{ color: "blue" }}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}

@@ -2,7 +2,7 @@ import * as React from "react";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { getAllRemitos, postAllRemitos, deleteRemito, getAllUsuarios } from "../../redux/actions";
+import { getAllRemitos, postAllRemitos, deleteRemito } from "../../redux/actions";
 import PropTypes from "prop-types";
 import { Box, Button, TextField, InputAdornment, Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Paper, tableCellClasses } from "@mui/material";
 import { makeStyles } from "@mui/styles";
@@ -19,12 +19,10 @@ import moment1 from "moment";
 import { exportToExcel } from "../../helpers/helpers";
 import excelIcon from "../../assets/excel.png"
 
-
 function Row({ row }) {
   const insumos = row.Insumos || [];
   const [open, setOpen] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(false);
-  const usuarios = useSelector((state)=>state.usuarios);
   const dispatch = useDispatch();
 
 
@@ -88,9 +86,7 @@ function Row({ row }) {
         </TableCell>
 
         {!isMobile && (
-          <TableCell align="center">
-            {usuarios.filter((usuario) => usuario.id === Number(row.usuario))[0]?.name || ""}
-            </TableCell>
+          <TableCell align="center" scope="row">{row.usuario}</TableCell>
         )}
 
         {!isMobile && (
@@ -112,16 +108,16 @@ function Row({ row }) {
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell align="center" sx={{ color: "steelblue", fontWeight: "bold" }}>Id</TableCell>
-                    <TableCell align="center" sx={{ color: "steelblue", fontWeight: "bold" }}>Nombre</TableCell>
-                    <TableCell align="center" sx={{ color: "steelblue", fontWeight: "bold" }}>Precio</TableCell>
-                    <TableCell align="center" sx={{ color: "steelblue", fontWeight: "bold" }}>Cantidad</TableCell>
+                    <TableCell>Id</TableCell>
+                    <TableCell align="center">Nombre</TableCell>
+                    <TableCell align="center">Precio</TableCell>
+                    <TableCell align="center">Cantidad</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {insumos.map((insumo, index) => (
                     <TableRow key={index}>
-                      <TableCell align="center" component="th" scope="row">{insumo.id}</TableCell>
+                      <TableCell component="th" scope="row">{insumo.id}</TableCell>
                       <TableCell align="center">{insumo.nombre}</TableCell>
                       <TableCell align="center">{parseFloat(insumo.precio)}</TableCell>
                       <TableCell align="center">{parseFloat(insumo.RemitoInsumo.cantidad)}</TableCell>
@@ -213,7 +209,6 @@ export default function CollapsibleTable() {
   }, []);
 
   useEffect(() => {
-    dispatch(getAllUsuarios());
     dispatch(getAllRemitos());
   }, [dispatch]);
 
@@ -348,7 +343,6 @@ export default function CollapsibleTable() {
             label="Fecha Minima"
             type="date"
             InputLabelProps={{ shrink: true }}
-            className={style.customTextfield}
             variant="outlined"
             style={{ margin: '8px', width: '160px' }}
             value={
@@ -371,7 +365,6 @@ export default function CollapsibleTable() {
               min: "yyyy-MM-dd",
               max: filter.filters.fechaMax || "yyyy-MM-dd",
             }}
-           
           />
 
           <TextField
@@ -379,7 +372,6 @@ export default function CollapsibleTable() {
             type="date"
             style={{ margin: '8px', width: '160px' }}
             InputLabelProps={{ shrink: true }}
-            className={style.customTextfield}
             variant="outlined"
             value={
               filter.filters.fechaMax

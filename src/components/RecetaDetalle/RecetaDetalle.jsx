@@ -61,7 +61,6 @@ export default function RecetaDetalle(props) {
     idPrevio: '',
     idInsumoNuevo: '',
     cantidad: '',
-    nombre:"",
   });
 
   const [recetaName, setRecetaName] = useState(receta?.name);
@@ -73,7 +72,6 @@ export default function RecetaDetalle(props) {
   }, [dispatch, id, receta?.name, putRecetaInsumo]);
 
   const rows = receta && receta.Insumos ? receta.Insumos : [];
-  // console.log(insumoReceta);
 
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
@@ -88,13 +86,7 @@ export default function RecetaDetalle(props) {
   };
 
   const handleClickOpen2 = (data) => {
-    const insumoSeleccionado = rows.find((insumo) => insumo.id === data);
-    setInsumoReceta((prevInsumoReceta) => ({
-      ...prevInsumoReceta,
-      idPrevio: data,
-      nombre: insumoSeleccionado?.nombre || '',
-      idInsumoNuevo:data,
-    }));
+    setInsumoReceta({ idPrevio: data });
     setOpen2(true);
   };
 
@@ -147,9 +139,11 @@ export default function RecetaDetalle(props) {
         icon: 'success',
         button: {},
       });
+
       swal.close();
     } catch (error) {
       swal('Oh noes!', 'The AJAX request failed!', 'error');
+      console.error(error);
       swal.close();
     }
   };
@@ -162,6 +156,7 @@ export default function RecetaDetalle(props) {
     }));
   };
 
+  // console.log(InsumoReceta);
   const handleExportToExcel = () => {
     const csvData = [
       { receta: receta.name },
@@ -191,7 +186,7 @@ export default function RecetaDetalle(props) {
 
   const handleEditarInsumo = (insumoReceta) => {
     const idPrevio = Number(insumoReceta.idPrevio);
-    // console.log(id, insumoReceta);
+    console.log(id, insumoReceta);
 
     dispatch(deleteInsumoReceta(Number(id), idPrevio)).then(() => {
       dispatch(postRecetaInsumo(Number(id), insumoReceta));
@@ -207,7 +202,7 @@ export default function RecetaDetalle(props) {
   };
   const handleEditarInsumo1 = (insumoReceta) => {
     const idPrevio = Number(insumoReceta.idPrevio);
-    // console.log(id, insumoReceta);
+    console.log(id, insumoReceta);
     dispatch(postRecetaInsumo(Number(id), insumoReceta));
     setOpen(false);
     swal({
@@ -219,7 +214,6 @@ export default function RecetaDetalle(props) {
     setOpen3(false);
   };
   const handlerClickDelete = (id) => {
-    console.log(id);
     swal({
       title: `Esta seguro de borrar la receta de ${receta.name} ?`,
       text: 'Esta función solo debe utilizarse para borrar Recetas creadas erróneamente!',
@@ -228,7 +222,7 @@ export default function RecetaDetalle(props) {
       dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
-        dispatch(deleteReceta(receta.id)).then(() => {
+        dispatch(deleteReceta(id)).then(() => {
           dispatch(getAllRecetas());
         });
         swal(`Poof! La receta de id ${receta.name} fue borrada!`, {
@@ -241,13 +235,9 @@ export default function RecetaDetalle(props) {
   };
 
   const handleChangeSelect = (event) => {
-    const selectedId = event.target.value;
-    const selectedInsumo = insumos.find((insumo) => insumo.id === selectedId);
-  
     setInsumoReceta((prevState) => ({
       ...prevState,
-      idInsumoNuevo: selectedId,
-      nombre: selectedInsumo ? selectedInsumo.nombre : '',
+      idInsumoNuevo: event.target.value,
     }));
   };
 
@@ -259,6 +249,8 @@ export default function RecetaDetalle(props) {
   };
 
   const handlerDeleteInsumo = (e, rowId) => {
+    // console.log(id, rowId);
+
     swal({
       title: '¿Está seguro?',
       text: `Está por borrar el insumo ${rowId} de ${receta.name}!`,
@@ -320,7 +312,7 @@ export default function RecetaDetalle(props) {
       sorteable: false,
       width: 200,
       renderCell: (params) => {
-        const aux = Number(params.row.InsumoReceta.cantidad).toFixed(4);
+        const aux = Number(params.row.InsumoReceta.cantidad).toFixed(2);
         return <p>{aux}</p>;
       },
     },
@@ -342,24 +334,24 @@ export default function RecetaDetalle(props) {
       field: 'editar',
       headerName: 'Editar',
       sortable: false,
-      
       disableColumnMenu: true,
       hideSortIcons: true,
       width: 70,
       renderCell: (params) => (
         // !editar ? null :
+        
         <IconButton
-        onClick={() => handleClickOpen2(params.row.id)}
-        key={params.row.id}
-        disabled={!editar}
-        sx={{ color: 'blue' }}
+          onClick={() => handleClickOpen2(params.row.id)}
+          key={params.row.id}
+          disabled={!editar}
+          sx={{ color: 'blue' }}
         >
           <ModeEditIcon />
         </IconButton>
         
-        ),
-      },
-      
+      ),
+    },
+
     {
       field: 'borrar',
       headerName: 'Borrar',
@@ -394,7 +386,7 @@ export default function RecetaDetalle(props) {
       sorteable: false,
       width: 80,
       renderCell: (params) => {
-        const aux = Number(params.row.InsumoReceta.cantidad).toFixed(4);
+        const aux = Number(params.row.InsumoReceta.cantidad).toFixed(6);
         return <p>{aux}</p>;
       },
     },
@@ -412,7 +404,7 @@ export default function RecetaDetalle(props) {
       },
     },
   ];
-
+console.log(editar);
   return (
     <>
       <NavBar />
@@ -463,10 +455,10 @@ export default function RecetaDetalle(props) {
           margin: '5px',
           color: 'white',
           borderRadius: '6px',
+          background: editar? '#2779ff': '#b2b2b2',
           alignItems: 'center',
           fontWeight: 'bold',
-          background: editar? '#2779ff': '#2779ff',
-          '&:hover': { backgroundColor: '#0011ff', transition: '1s' },
+          '&:hover': { backgroundColor: '#0011ff', transition: '5s' },
         }}
       >
         Editar receta {editar? 'activado' : 'desactivado'}
@@ -579,7 +571,7 @@ export default function RecetaDetalle(props) {
       <Box>
         <Dialog open={open2} onClose={handleClose2}>
           <FormControl>
-            <DialogTitle>EDITAR INSUMO</DialogTitle>
+            <DialogTitle>EDITAR O AGREGAR INSUMO</DialogTitle>
             <DialogContent>
               <Select
                 sx={{ m: 1, width: 300, height: 56 }}
@@ -592,7 +584,7 @@ export default function RecetaDetalle(props) {
                 inputProps={{ 'aria-label': 'Without label' }}
               >
                 <MenuItem sx={{ textAlign: 'left' }} disabled value="">
-                  <span>{insumoReceta.nombre}</span>
+                  <span>Nombre del insumo</span>
                 </MenuItem>
                 {insumos?.map((e, i) => (
                   <MenuItem key={i} value={e.id}>
@@ -614,8 +606,8 @@ export default function RecetaDetalle(props) {
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose2}>Cancelar</Button>
-              <Button disabled={!insumoReceta.cantidad} onClick={() => handleEditarInsumo(insumoReceta)}>
-                Guardar
+              <Button onClick={() => handleEditarInsumo(insumoReceta)}>
+                Editar o agregar insumo
               </Button>
             </DialogActions>
           </FormControl>
@@ -625,7 +617,7 @@ export default function RecetaDetalle(props) {
       <Box>
         <Dialog open={open3} onClose={handleClose3}>
           <FormControl>
-            <DialogTitle>AGREGAR UN INSUMO A LA RECETA</DialogTitle>
+            <DialogTitle>AGREGAR CANTIDAD INSUMO</DialogTitle>
             <DialogContent>
               <Select
                 sx={{ m: 1, width: 300, height: 56 }}
@@ -661,7 +653,7 @@ export default function RecetaDetalle(props) {
             <DialogActions>
               <Button onClick={handleClose3}>Cancelar</Button>
               <Button onClick={() => handleEditarInsumo1(insumoReceta)}>
-               Guardar
+                Agregar cantidad
               </Button>
             </DialogActions>
           </FormControl>

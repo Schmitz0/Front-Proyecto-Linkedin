@@ -1,14 +1,12 @@
-// import React from 'react';
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import { getAllUsuarios, putUsuario } from '../../redux/actions';
 import NavBar from '../NavBar/NavBar';
 import { emailRegex } from '../../helpers/helpers.js';
 import style from '../UsuariosForm/UsuariosForm.module.css';
-import NavBarDashboard from "../NavBarDashboard/NavBarDashboard"
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useParams, useNavigate } from 'react-router-dom';
 import { OutlinedInput, Button, TextField, Select, MenuItem, Box, Typography, FormControl, InputLabel } from '@mui/material';
 
 const ITEM_HEIGHT = 48;
@@ -85,20 +83,22 @@ const UsuariosFormEdit = () => {
       ) : (
         <div>
           <NavBar />
-          <NavBarDashboard/>
-
-
           <form onSubmit={HandleSubmit}>
             <FormControl sx={{ m: 1.5, alignItems: 'center' }}>
-              <div className={style.selectContainer}>
+              <Typography
+                textAlign="center"
+                sx={{
+                  m: 2,
+                  fontFamily: 'roboto',
+                  fontWeight: 700,
+                  color: 'inherit',
+                  textDecoration: 'none',
+                }}
+              >
+                Editar todos los campos
+              </Typography>
 
-                <Link to={'/usuarios'} style={{ textDecoration: 'none' }}>
-                  <Button>
-                    <ArrowBackIcon /> Atrás 
-                  </Button>
-                </Link> 
-                <br/>
-                <br/>
+              <div className={style.selectContainer}>
                 <Box>
                   <TextField
                     sx={{ m: 1, width: 300 }}

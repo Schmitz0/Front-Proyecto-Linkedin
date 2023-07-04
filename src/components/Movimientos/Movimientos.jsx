@@ -2,7 +2,7 @@ import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
-import { deleteMovimiento, getAllInsumos, getAllMovimientos, getAllUsuarios, postAllMovimientos } from "../../redux/actions";
+import { deleteMovimiento, getAllInsumos, getAllMovimientos, postAllMovimientos } from "../../redux/actions";
 import { TextField, OutlinedInput, MenuItem, Box, InputAdornment, Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, tableCellClasses, TableRow, Typography, Paper, Button, Select } from "@mui/material";
 import moment from "moment-timezone";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -29,11 +29,9 @@ function Row({ row }) {
   const insumos = row.Insumos || [];
   const [open, setOpen] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(false);
-  const usuarios = useSelector((state)=>state.usuarios);
-  const registro = useSelector((state) => state.registroUsuario);
-  // console.log(row);
-
   const dispatch = useDispatch();
+
+  console.log(row);
 
   React.useEffect(() => {
     const handleResize = () => {
@@ -76,15 +74,7 @@ function Row({ row }) {
 
   return (
     <>
-      {
-        row.tipoDeMovimiento !== "Modificación del insumo" && 
-        row.tipoDeMovimiento !=="Eliminación de insumo" && 
-        row.tipoDeMovimiento !=="Creación de insumo" && 
-        row.tipoDeMovimiento !=="Creación de proveedor" && 
-        row.tipoDeMovimiento !=="Edición de proveedor" && 
-        row.tipoDeMovimiento !=="Eliminación de proveedor" && 
-        row.tipoDeMovimiento !=="Eliminación de la receta" && 
-        row.tipoDeMovimiento !=="Edición de la receta" &&  (
+
       <TableRow
         sx={{
           "& > *": { borderBottom: "unset" },
@@ -124,22 +114,22 @@ function Row({ row }) {
             .format("DD/MM/YYYY")}
         </TableCell>
         <TableCell sx={{ backgroundColor: "#f2f2f2" }} align="center">
-  {usuarios.filter((usuario) => usuario.id === row.usuario)[0]?.name || ""}
-</TableCell>
+          {row.usuario}
+        </TableCell>
+
         <TableCell sx={{ backgroundColor: "#f2f2f2" }} align="center">
           <IconButton onClick={() => handlerClickDelete(row.id)}>
             <DeleteIcon sx={{ color: "blue" }} />
           </IconButton>
         </TableCell>
       </TableRow>
-)}
 
       {/* TABLA RESUMIDA */}
-      
+
       <TableRow
         sx={{
           "& > *": { borderBottom: "unset" },
-          display: { xs: isMobile ? "contents": "none", md: "none" },    
+          display: { xs: "contents", md: "none" },
         }}
       >
         <TableCell>
@@ -174,7 +164,6 @@ function Row({ row }) {
         </TableCell> */}
       </TableRow>
 
-
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
@@ -190,7 +179,7 @@ function Row({ row }) {
                 <TableHead>
                   <TableRow>
                     <TableCell
-                      sx={{ color: "steelblue", fontWeight: "bold" ,display: isMobile ? "none" : "table-cell",}}
+                      sx={{ color: "steelblue", fontWeight: "bold" ,display: { xs: "none", md: "contents" } }}
                       // sx={{ backgroundColor:{md:'grey', sx:'none'}, color:{ md:'white'}}}
                       align="center"
                     >
@@ -203,7 +192,7 @@ function Row({ row }) {
                       Nombre del insumo
                     </TableCell>
                     <TableCell
-                      sx={{ color: "steelblue", fontWeight: "bold", display: isMobile ? "none" : "table-cell", }}
+                      sx={{ color: "steelblue", fontWeight: "bold" }}
                       align="center"
                     >
                       Precio
@@ -227,14 +216,13 @@ function Row({ row }) {
                       Stock Final
                     </TableCell>
                   </TableRow>
-      
                 </TableHead>
 
                 <TableBody>
                   {insumos?.map((insumo, index) => (
                     <TableRow key={index}>
                       <TableCell
-                       sx={{ display: isMobile ? "none" : "table-cell",}}
+                        sx={{ display: { xs: "none", md: "contents" } }}
                         align="right"
                         component="th"
                         scope="row"
@@ -242,10 +230,9 @@ function Row({ row }) {
                         {insumo.id}
                       </TableCell>
                       <TableCell align="center">{insumo.nombre}</TableCell>
-                      <TableCell align="center"  sx={{ display: isMobile ? "none" : "table-cell",}}>
+                      <TableCell align="center">
                         {Number(insumo?.precio.toFixed(2))}
                       </TableCell>
-                      
                       <TableCell align="center">
                         {Number(
                           parseFloat(
@@ -260,7 +247,7 @@ function Row({ row }) {
                           ).toFixed(2)
                         )}
                       </TableCell>
-                      <TableCell align="center" style={{ color: insumo?.MovimientoInsumo?.stockFinal < 0 ? 'red' : 'green' }} >
+                      <TableCell align="center">
                         {Number(
                           parseFloat(
                             insumo?.MovimientoInsumo?.stockFinal
@@ -276,8 +263,6 @@ function Row({ row }) {
         </TableCell>
       </TableRow>
 
-
-
     </>
   );
 }
@@ -285,8 +270,6 @@ function Row({ row }) {
 export default function CollapsibleTable() {
   const classes = useStyles();
   const insumosGlobal = useSelector((state) => state.insumos);
-  const usuarios = useSelector((state) => state.usuarios);
-  
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -328,8 +311,6 @@ export default function CollapsibleTable() {
   const [filteredRows1, setFilteredRows1] = React.useState(rows);
   const [searchValue, setSearchValue] = React.useState("");
   const [searchId, setSearchId] = React.useState("");
-  const [searchUser, setSearchUser] = React.useState("");
-  const [selectedUser, setSelectedUser] = React.useState("");
   const [isMobile, setIsMobile] = React.useState(false);
   const [isButtonClicked, setButtonClicked] = React.useState(false);
   const [filter, setFilter] = React.useState({
@@ -344,14 +325,13 @@ export default function CollapsibleTable() {
   const [pageLoaded, setPageLoaded] = React.useState(false);
 
   useEffect(() => {
-    dispatch(getAllUsuarios());
     dispatch(getAllInsumos());
     if (!pageLoaded) {
-      dispatch(getAllMovimientos({ estado: true }));
+      dispatch(getAllMovimientos({estado:true}));
       setPageLoaded(true);
     }
   }, [dispatch, pageLoaded]);
-  
+
   const convertirPrecioANumero = (insumos) => {
     return insumos.map((insumo) => {
       return {
@@ -360,7 +340,7 @@ export default function CollapsibleTable() {
       };
     });
   };
-  
+
   const filtro1 =
     searchValue.length === 0
       ? rows
@@ -378,28 +358,24 @@ export default function CollapsibleTable() {
           row.tipoDeMovimiento.toLowerCase().includes(searchValue.toLowerCase())
         )
       : filteredRows;
-  
-  const filteredRowsWithUser = selectedUser
-    ? filteredRows.filter((row) => row.usuario === selectedUser)
-    : filteredRows;
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     let updatedFilteredRows = rows; // Inicialmente, utilizar las filas originales
-  
+
     if (searchValue !== "") {
       updatedFilteredRows = updatedFilteredRows?.filter((row) =>
         row.tipoDeMovimiento.toLowerCase().includes(searchValue.toLowerCase())
       );
     }
-  
+
     if (searchId !== "") {
       updatedFilteredRows = updatedFilteredRows?.filter((row) =>
         Number(row.id).includes(Number(searchId))
       );
     }
-  
+
     if (filter?.filters.fechaMin !== "" && filter?.filters.fechaMax !== "") {
       const fechaMin = moment1(filter?.filters.fechaMin, "YYYY-MM-DD").format(
         "DD-MM-YYYY"
@@ -407,7 +383,7 @@ export default function CollapsibleTable() {
       const fechaMax = moment1(filter?.filters.fechaMax, "YYYY-MM-DD").format(
         "DD-MM-YYYY"
       );
-  
+
       updatedFilteredRows = updatedFilteredRows.filter((row) => {
         const fechaRemito = moment1(row.createdAt, "YYYY-MM-DD").format(
           "DD-MM-YYYY"
@@ -415,9 +391,9 @@ export default function CollapsibleTable() {
         return fechaRemito >= fechaMin && fechaRemito <= fechaMax;
       });
     }
-  
+
     setFilteredRows1(updatedFilteredRows); // Actualizar el estado filteredRows con los movimientos filtrados
-  
+
     dispatch(postAllMovimientos(filter)); // Ejecutar la acción correspondiente al filtrar los movimientos
   };
 
@@ -445,7 +421,6 @@ export default function CollapsibleTable() {
     exportToExcel(flattenedData, "movimiento");
   };
 
-  
   return (
     <>
       <div className={styles.mainContainer}>
@@ -470,27 +445,6 @@ export default function CollapsibleTable() {
             {movis?.map((e, i) => (
               <MenuItem key={i} value={e}>
                 {e}
-              </MenuItem>
-            ))}
-          </Select>
-          <Select
-            sx={{ width: "330px", margin: "5px" }}
-            displayEmpty
-            label="Filtrar por usuario"
-            variant="outlined"
-            value={selectedUser}
-            input={<OutlinedInput />}
-            MenuProps={MenuProps}
-            inputProps={{ "aria-label": "Without label" }}
-            onChange={(e) => setSelectedUser(e.target.value)}
-          >
-            <MenuItem disabled value="">
-              Filtrar por usuario
-            </MenuItem>
-            <MenuItem value="">Mostrar todos los usuarios</MenuItem>
-            {usuarios?.map((usuario) => (
-              <MenuItem key={usuario.id} value={usuario.id}>
-                {usuario.name}
               </MenuItem>
             ))}
           </Select>
@@ -524,7 +478,6 @@ export default function CollapsibleTable() {
               label="Fecha Minima"
               type="date"
               InputLabelProps={{ shrink: true }}
-              className={styles.customTextfield}
               variant="outlined"
               value={
                 filter.filters.fechaMin
@@ -558,7 +511,6 @@ export default function CollapsibleTable() {
               label="Fecha Maxima"
               type="date"
               InputLabelProps={{ shrink: true }}
-              className={styles.customTextfield}
               variant="outlined"
               value={
                 filter.filters.fechaMax
@@ -603,7 +555,7 @@ export default function CollapsibleTable() {
               inputProps={{ "aria-label": "Without label" }}
             >
               <MenuItem disabled value="">
-                <span>Filtrar por insumos y/o fecha</span>
+                <span>Filtrar por insumos entre fechas</span>
               </MenuItem>
               {insumosGlobal?.map((e, i) => (
                 <MenuItem key={i} value={e.nombre}>
@@ -625,7 +577,7 @@ export default function CollapsibleTable() {
                 variant="contained"
                 onClick={handleSubmit}
               >
-                Filtrar por Insumo y/o Fecha 
+                Filtrar por fecha
               </Button>
             </Link>
 
@@ -682,7 +634,7 @@ export default function CollapsibleTable() {
               <StyledTableCell align="center">Borrar</StyledTableCell>
             </StyledTableRow>
 
-            <StyledTableRow sx={{ display: { xs: "contents", md: "none", } }}>
+            <StyledTableRow sx={{ display: { xs: "contents", md: "none" } }}>
               <StyledTableCell />
               <StyledTableCell>Id</StyledTableCell>
               <StyledTableCell align="center">Tipo de Mov</StyledTableCell>
@@ -708,16 +660,16 @@ export default function CollapsibleTable() {
                 </React.Fragment>
               ))}
             {isFiltered &&
-    filteredRowsWithUser?.map((row, i) => (
-      <React.Fragment key={i}>
-        <Row
-          row={{
-            ...row,
-            Insumos: convertirPrecioANumero(row.Insumos),
-          }}
-        />
-      </React.Fragment>
-    ))}
+              filteredRows?.map((row, i) => (
+                <React.Fragment key={i}>
+                  <Row
+                    row={{
+                      ...row,
+                      Insumos: convertirPrecioANumero(row.Insumos),
+                    }}
+                  />
+                </React.Fragment>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>

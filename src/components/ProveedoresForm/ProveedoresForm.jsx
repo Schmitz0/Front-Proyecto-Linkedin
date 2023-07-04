@@ -13,9 +13,6 @@ const ProveedoresForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [submitted, setSubmitted] = useState(false);
-  const [areAllFieldsComplete, setAreAllFieldsComplete] = useState(false);
-
   const [input, setInput] = useState({
     nombre: '',
     nombreContacto: '',
@@ -32,16 +29,10 @@ const ProveedoresForm = () => {
       ...input,
       [event.target.name]: event.target.value,
     });
-   
-      const { nombre,  nombreContacto,email,descripcion,telefono,direccion,codigoPostal } = input;
-      const fieldsComplete = nombre.trim() !== '' && nombreContacto.trim() !== '' && email.trim() !== '' && descripcion.trim() !== '' && telefono.trim() !== ''&& direccion.trim() !== ''&& codigoPostal.trim() !== '';
-      setAreAllFieldsComplete(fieldsComplete);
   };
 
   const HandleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
-    if (input && input.nombre && input.nombreContacto && input.email && input.descripcion && input.telefono && input.direccion && input.codigoPostal) {
     dispatch(postProveedor(input));
     swal({
       position: 'top-end',
@@ -49,7 +40,6 @@ const ProveedoresForm = () => {
       title: `Proveedor "${input.nombre}" creado correctamente`,
       button: true,
       }).then(() => {navigate('/proveedores')});
-    }
   };
 
   return (
@@ -66,7 +56,7 @@ const ProveedoresForm = () => {
 
           <form onSubmit={HandleSubmit}>
             <FormControl sx={{ m: 1.5, alignItems: 'center', maxWidth:'900px' }}>
-              {/* <div>
+              <div>
                 <Typography
                   textAlign="center"
                   sx={{
@@ -80,19 +70,18 @@ const ProveedoresForm = () => {
                 >
                   Crear nuevo proveedor
                 </Typography>
-              </div> */}
+              </div>
               <div className={style.selectContainer}>
                 <Box>
                   <TextField
-                    sx={{ m: 1, width: 300,  }}
+                    sx={{ m: 1, width: 300 }}
+                    required
                     name="nombre"
                     label="Nombre de la empresa"
                     variant="outlined"
                     placeholder="Proveedor..."
                     onChange={handleChange}
                     value={input.nombre}
-                    error={submitted && input.nombre === ''}
-                    helperText={submitted && input.nombre === '' ? 'Este campo es requerido' : ''}
                   />
                   <TextField
                     sx={{ m: 1, width: 300 }}
@@ -102,19 +91,16 @@ const ProveedoresForm = () => {
                     placeholder="Nombre del contacto..."
                     onChange={handleChange}
                     value={input.nombreContacto}
-                    error={submitted && input.nombreContacto === ''}
-                    helperText={submitted && input.nombreContacto === '' ? 'Este campo es requerido' : ''}
                   />
                   <TextField
                     sx={{ m: 1, width: 300 }}
+                    required
                     name="email"
                     label="Email"
                     variant="outlined"
                     placeholder="Email..."
                     onChange={handleChange}
                     value={input.email}
-                    error={submitted && input.email === ''}
-                    helperText={submitted && input.email === '' ? 'Este campo es requerido' : ''}
                   />
                   <TextField
                     sx={{ m: 1, width: 300 }}
@@ -125,8 +111,6 @@ const ProveedoresForm = () => {
                     placeholder="Telefono..."
                     onChange={handleChange}
                     value={input.telefono}
-                    error={submitted && input.telefono === ''}
-                    helperText={submitted && input.telefono === '' ? 'Este campo es requerido' : ''}
                   />
                   <TextField
                     sx={{ m: 1, width: 300 }}
@@ -136,8 +120,6 @@ const ProveedoresForm = () => {
                     placeholder="direccion..."
                     onChange={handleChange}
                     value={input.direccion}
-                    error={submitted && input.direccion === ''}
-                    helperText={submitted && input.direccion === '' ? 'Este campo es requerido' : ''}
                   />
                   <TextField
                     sx={{ m: 1, width: 300 }}
@@ -147,8 +129,6 @@ const ProveedoresForm = () => {
                     placeholder="Codigo postal..."
                     onChange={handleChange}
                     value={input.codigoPostal}
-                    error={submitted && input.codigoPostal === ''}
-                    helperText={submitted && input.codigoPostal === '' ? 'Este campo es requerido' : ''}
                   />
                   <TextField
                     sx={{ m: 1, width: 300 }}
@@ -158,8 +138,6 @@ const ProveedoresForm = () => {
                     placeholder="Descripcion..."
                     onChange={handleChange}
                     value={input.descripcion}
-                    error={submitted && input.descripcion === ''}
-                    helperText={submitted && input.descripcion === '' ? 'Este campo es requerido' : ''}
                     multiline
                     rows={2}
                   />
@@ -170,10 +148,10 @@ const ProveedoresForm = () => {
                 <Button
                   className={style.boton}
                   type="submit"
-                //   disabled={
-                //   !input.nombre ||
-                //   !/^([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+)\.([a-zA-Z]{2,})$/g.test(input.email)
-                // }
+                  disabled={
+                  !input.nombre ||
+                  !/^([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+)\.([a-zA-Z]{2,})$/g.test(input.email)
+                }
                   sx={{
                     paddingRight: '25px',
                     paddingLeft: '25px',

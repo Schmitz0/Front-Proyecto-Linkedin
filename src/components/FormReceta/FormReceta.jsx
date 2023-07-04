@@ -1,13 +1,12 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getAllInsumos, getAllProveedores, getAllRecetas, postReceta, } from "../../redux/actions";
 import { TableCell, TableRow, TableHead, Table, Paper, TableContainer, TableBody } from '@mui/material';
 import NavBar from "../NavBar/NavBar";
 import style from "./FormRecetaDetalle.module.css";
 import { OutlinedInput, Button, TextField, Select, MenuItem, Box, Typography, FormControl } from "@mui/material";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -50,8 +49,6 @@ const FormReceta = () => {
   });
 
   const [insumox, setInsumox] = useState([])
-  const [submitted, setSubmitted] = useState(false);
-  const [areAllFieldsComplete, setAreAllFieldsComplete] = useState(false);
 
   const [state, setState] = useState({
     nombre: "",
@@ -82,15 +79,7 @@ const FormReceta = () => {
         recetaError: false,
         recetaErrorMessage: ``,
       });
-      const { name } = receta;
-      const { cantidad, id } = state;
-      const fieldsComplete = name.trim() !== '' && cantidad.trim() !== '' && id.trim() !== '';
-      setAreAllFieldsComplete(fieldsComplete);
-      
     }
-    
-      
-   
   };
 
   // const handleChangeImg = (event) => {
@@ -131,68 +120,55 @@ const FormReceta = () => {
 
   const handlerClick = (e) => {
     e.preventDefault();
-    setSubmitted(true);
-  
-      if (state){
-      const newInsumo = {
-        id: state.id,
-        nombre: state.nombre,
-        cantidad: state.cantidad,
-        // costoPorBotella: state.costoPorBotella,
-        // costo: state.costo,
-        // precio: state.precio,
-      };
-  
-      setInsumox([...insumox, newInsumo]);
-      setState({
-        id: '',
-        nombre: '',
-        cantidad: '',
-        // costoPorBotella: '',
-        // costo: '',
-        // precio: '',
-      });
-      if(submitted === true) {
-        setSubmitted(false)
-      }
-    }
-    
+    const newInsumo = {
+      id: state.id,
+      nombre: state.nombre,
+      cantidad: state.cantidad,
+      // costoPorBotella: state.costoPorBotella,
+      // costo: state.costo,
+      // precio: state.precio,
+    };
+    setInsumox([...insumox, newInsumo]);
+    setState({
+      id: "",
+      nombre: "",
+      cantidad: "",
+      // costoPorBotella: "",
+      // costo: "",
+      // precio: "",
+    });
   };
 
 
   const HandleSubmit = async (e) => {
     e.preventDefault();
     receta.insumos = insumox;
-  
     swal({
-      title: 'Esta seguro de crear una nueva receta?',
-      text: 'Revise haber ingresado todos los insumos necesarios.',
-      icon: 'warning',
+      title: "Esta seguro de crear una nueva receta?",
+      text: "Revise haber ingresado todos los insumos necesarios.",
+      icon: "warning",
       buttons: true,
       // dangerMode: true,
-    }).then((create) => {
-      if (create ) {
-        dispatch(postReceta(receta));
-        swal(`La receta fue creada con éxito`, {
-          icon: 'success',
-        }).then(() => {
-          navigate(`/produccion`);
-        });
-      } else {
-        swal('Puede seguir agregando insumos en la receta');
-      }
-    });
+    })
+      .then((create) => {
+        if (create) {
+          dispatch(postReceta(receta))
+          swal(`La receta fue creada con éxito`, {
+            icon: "success",
+          }).then(
+            () => { (navigate(`/recetas`)) }
+          )
+        } else {
+          swal("Puede seguir agregando insumos en la receta");
+        }
+
+      });
   };
+
   return (
     <>
       <div>
         <NavBar />
-
-        <Link to={'/produccion'} style={{ textDecoration: 'none' }}>
-            <Button>
-              <ArrowBackIcon /> Atrás 
-            </Button>
-          </Link> 
 
         <form onSubmit={HandleSubmit}>
           <FormControl sx={{ m: 1.5, alignItems: "center" }}>
@@ -221,9 +197,9 @@ const FormReceta = () => {
                   placeholder="Nombre de la receta..."
                   label="Nombre de la receta"
                   value={receta.name}
+                  error={receta.recetaError}
+                  helperText={receta.recetaErrorMessage}
                   onChange={handleChange}
-                  error={submitted && receta.name === ''}
-                  helperText={submitted && receta.name === '' ? 'Este campo es requerido' : ''}
                 />
                 <Typography>
                   <br/>
@@ -251,8 +227,6 @@ const FormReceta = () => {
                     input={<OutlinedInput />}
                     MenuProps={MenuProps}
                     inputProps={{ "aria-label": "Without label" }}
-                    error={submitted && state.id === ''}
-                  helperText={submitted && state.id === '' ? 'Este campo es requerido' : ''}
                     >
                     <MenuItem sx={{textAlign:"left"}} disabled value="">
                       <span>Nombre del insumo</span>
@@ -275,15 +249,48 @@ const FormReceta = () => {
                   onChange={handleChange2}
                   value={state.cantidad}
                   inputProps={{ min: 0 }}
-                   error={submitted && state.cantidad === ''}
-                  helperText={submitted && state.cantidad === '' ? 'Este campo es requerido' : ''}
                   />
+
+                {/* <TextField
+                  sx={{ m: 1, width: 300 }}
+                  name="costoPorBotella"
+                  type="number"
+                  variant="outlined"
+                  placeholder="Costo Por Botella..."
+                  label="Costo Por Botella..."
+                  onChange={handleChange2}
+                  value={state.costoPorBotella}
+                  inputProps={{ min: 0 }}
+                /> */}
+                {/* <TextField
+                  sx={{ m: 1, width: 300 }}
+                  name="costo"
+                  type="number"
+                  variant="outlined"
+                  placeholder="Costo total?"
+                  label="Costo"
+                  onChange={handleChange2}
+                  value={state.costo}
+                  inputProps={{ min: 0 }}
+                /> */}
+                {/* <TextField
+                  sx={{ m: 1, width: 300 }}
+                  name="precio"
+                  type="number"
+                  variant="outlined"
+                  placeholder="Precio..."
+                  label="Precio..."
+                  onChange={handleChange2}
+                  value={state.precio}
+                  
+                  inputProps={{ min: 0 }}
+                /> */}
               </Box>
             </div>
 
             <Button
               className={style.boton}
-              // disabled={!state.nombre || !state.cantidad ||!receta.name}
+              disabled={!state.nombre || !state.cantidad }
               onClick={handlerClick}
               sx={{
                 paddingRight: "25px",
@@ -310,6 +317,9 @@ const FormReceta = () => {
                       <TableCell align="right">Id</TableCell>
                       <TableCell>Nombre </TableCell>
                       <TableCell align="right">Cantidad</TableCell>
+                      {/* <TableCell align="right">Costo Por Botella</TableCell> */}
+                      {/* <TableCell align="right">Costo</TableCell> */}
+                      {/* <TableCell align="right">Precio</TableCell> */}
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -333,7 +343,7 @@ const FormReceta = () => {
 
             <div className={style.botonContainer}>
               <Button
-                disabled={ insumox.length <= 0 || receta.name.length<1 }
+                disabled={receta.recetaError || insumox.length <= 0 || receta.name.length<1 }
                 className={style.boton}
                 type="submit"
                 sx={{

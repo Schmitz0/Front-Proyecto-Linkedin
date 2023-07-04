@@ -1,6 +1,6 @@
 import { React, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteUsuario, getAllUsuarios, postRegistroUsuario } from "../../redux/actions";
+import { deleteUsuario, getAllUsuarios } from "../../redux/actions";
 import { Link } from "react-router-dom";
 import style from "../Usuarios/Usuarios.module.css"
 import NavBarDashboard from "../NavBarDashboard/NavBarDashboard"
@@ -11,7 +11,6 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { styled } from '@mui/material/styles';
 import Usuario from "../Usuario/Usuario";
-import eye from "../../assets/eye.png"
 
 const Usuarios = () => {
 
@@ -58,11 +57,6 @@ const Usuarios = () => {
       });
   }
 
-  const handlerClickUser = (id) => {
-    console.log(id);
-    dispatch(postRegistroUsuario(id))
-  }
-
   return (
     <>
       <div
@@ -100,7 +94,6 @@ const Usuarios = () => {
                   <StyledTableCell align="left">Foto</StyledTableCell>
                   <StyledTableCell align="left">Editar</StyledTableCell>
                   <StyledTableCell align="left">Borrar</StyledTableCell>
-                  <StyledTableCell align="left">Registro</StyledTableCell>
                 </StyledTableRow>
               </TableHead>
               <TableBody>
@@ -129,7 +122,6 @@ const Usuarios = () => {
                         src={e.imgUrl}
                       />
                     </StyledTableCell>
-                    
                     <StyledTableCell align="left">
                       <Link to={`/usuarios/form/${e.id}`}>
                         <IconButton key={e.id} sx={{ color: 'blue' }}>
@@ -149,22 +141,6 @@ const Usuarios = () => {
                         <DeleteIcon />
                       </IconButton>
                     </StyledTableCell>
-
-                    <StyledTableCell align="left">
-                      <Link to={`/usuarios/registro/${e.id}`}>
-                      <IconButton
-                      onClick={()=>handlerClickUser(e.id)}
-                      >
-                        <img
-                          src={eye}
-                          alt="ver registro"
-                          title="ver registro"
-                          style={{ width: "20px", height: "20px" }}
-                        />
-                      </IconButton>
-                      </Link>
-                    </StyledTableCell>
-
                   </StyledTableRow>
                 ))}
               </TableBody>

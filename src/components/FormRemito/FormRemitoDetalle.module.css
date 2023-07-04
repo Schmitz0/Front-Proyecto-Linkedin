@@ -8,18 +8,3 @@
     flex-direction: column;
     margin-bottom: 10px;
 }
-
-.customTextfield input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1); 
-    cursor: pointer;
-  }
-
-  .selectContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center; /* Agrega esta línea para centrar horizontalmente */
-    width: 60%;
-    margin-bottom: 10px;
-   
-  }

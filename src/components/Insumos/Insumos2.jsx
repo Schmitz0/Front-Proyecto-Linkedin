@@ -79,11 +79,11 @@ export default function DataTable(props) {
         dispatch(deleteInsumo(rowId)).then(() => {
           dispatch(getAllInsumos());
         });
-        swal(`El insumo de id ${rowId} ha sido borrado`, {
+        swal(`¡Poof! ¡El insumo de id ${rowId} fue borrado!`, {
           icon: "success",
         });
       } else {
-        swal(`El insumo de id ${rowId} no fue borrado`);
+        swal("¡Tranquilo, todo bien!");
       }
     });
   };
