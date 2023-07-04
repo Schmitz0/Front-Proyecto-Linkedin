@@ -191,7 +191,7 @@ const FormReceta = () => {
           <NavBar />
           <form onSubmit={HandleSubmit}>
             <FormControl sx={{ m: 1.5, alignItems: "center" }}>
-              <div>
+              {/* <div>
                 <Typography
                   textAlign="center"
                   sx={{
@@ -205,7 +205,7 @@ const FormReceta = () => {
                 >
                   Ingresar remito
                 </Typography>
-              </div>
+              </div> */}
               <div className={style.selectContainer}>
                 <Box>
                   <TextField
