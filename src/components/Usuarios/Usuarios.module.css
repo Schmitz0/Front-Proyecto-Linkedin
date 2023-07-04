@@ -1,0 +1,14 @@
+.navBar{
+    position: relative;
+}
+
+.mainContainer{
+    display: flex;
+    position: relative;
+    width: 96%;
+    justify-content: center;
+    left: 2%;
+    right: 2%;
+    flex-direction: column;
+    margin-top: 70px;
+}

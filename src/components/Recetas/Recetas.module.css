@@ -1,0 +1,12 @@
+.navBar{
+    position: relative;
+}
+
+.container{
+    position: relative;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
