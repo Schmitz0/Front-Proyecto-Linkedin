@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styles from '../NavBar/NavBar.module.css';
 import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Button, MenuItem, } from '@mui/material/';
 import MenuIcon from '@mui/icons-material/Menu';
-import logo from '../../assets/esencial-color.png';
+import logo from '../../assets/android-chrome-512x512.png';
 import UserStatus from '../UserStatus/UserStatus';
 import { Buffer } from 'buffer';
 
@@ -54,7 +54,7 @@ function ResponsiveAppBar() {
         <Toolbar className={styles.toolBar} 
         
         disableGutters>
-          {/* <Typography
+          <Typography
             // variant="h6"
             noWrap
             component="a"
@@ -70,7 +70,7 @@ function ResponsiveAppBar() {
             }}
           >
             <img src={logo} alt="no hay" />
-          </Typography> */}
+          </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
