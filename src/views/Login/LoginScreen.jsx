@@ -4,7 +4,7 @@ import { emailRegex } from "../../helpers/helpers.js";
 import { login } from "../../redux/actions/index.js";
 import { useNavigate } from "react-router-dom";
 import { Button, FormControl, Typography, TextField } from "@mui/material";
-import logo from "../../assets/esencial-color.png";
+import logo from "../../assets/apple-touch-icon.png";
 import style from "../Login/LoginScreen.module.css";
 
 export default function LoginScreen(props) {
