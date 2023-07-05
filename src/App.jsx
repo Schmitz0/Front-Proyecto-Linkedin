@@ -37,14 +37,14 @@ function App() {
           <Route exact path="*" element={<>NOT FOUND</>}/>
 
 
-        {/* <Route element={<AuthGuard/>}>
-        </Route> */}
+        <Route element={<AuthGuard/>}>
           <Route path="/dashboard" element={<Dashboard />}/>
           <Route exact path="/usuarios" element={<Usuarios />}/>
           <Route exact path="/usuarios/form" element={<UsuariosForm />}/>
           <Route exact path="/usuarios/form/:id" element={<UsuariosFormEdit />}/>
           <Route exact path="/graficos" element={<Graficos />}/>
           <Route exact path="/receta/form" element={<FormReceta />}/>
+        </Route>
 
           <Route exact path="/proyeccion" element={<Proyeccion />}/>
           <Route exact path="/proveedores/form/:id" element={<ProveedoresFormId />}/>
