@@ -9,8 +9,8 @@ import style from "../Login/LoginScreen.module.css";
 
 export default function LoginScreen(props) {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("admin@gmail.com");
+  const [password, setPassword] = useState("1234");
   const [showPassword, setShowPassword] = useState(false);
   const [emailError, setEmailError] = useState(false);
   
@@ -56,7 +56,7 @@ export default function LoginScreen(props) {
             <input
               required
               type="text"
-              placeholder="Ingrese su email..."
+              placeholder="admin@gmail.com"
               onChange={(e) => setEmail(e.target.value)}
               value={email}
             />
