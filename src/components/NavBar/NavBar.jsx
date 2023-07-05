@@ -54,7 +54,7 @@ function ResponsiveAppBar() {
         <Toolbar className={styles.toolBar} 
         
         disableGutters>
-          <Typography
+          {/* <Typography
             // variant="h6"
             noWrap
             component="a"
@@ -70,7 +70,7 @@ function ResponsiveAppBar() {
             }}
           >
             <img src={logo} alt="no hay" />
-          </Typography>
+          </Typography> */}
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
