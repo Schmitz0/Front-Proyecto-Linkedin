@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import NavBar from '../../components/NavBar/NavBar';
 import NavBarDashboard from '../../components/NavBarDashboard/NavBarDashboard';
-import Graficos from '../Graficos/Graficos';
+// import Graficos from '../Graficos/Graficos';
+import Usuarios from '../Usuarios/Usuarios';
 
 const Dashboard = () => {
 
@@ -10,7 +11,8 @@ const Dashboard = () => {
       <div style={{display:'flex' , flexDirection:'column'}}>
         <NavBar />
         <NavBarDashboard />
-        <Graficos/>
+        {/* <Graficos/> */}
+        <Usuarios/>
       </div>
     </>
   );
