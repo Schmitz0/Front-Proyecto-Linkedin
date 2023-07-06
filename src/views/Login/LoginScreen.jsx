@@ -4,7 +4,7 @@ import { emailRegex } from "../../helpers/helpers.js";
 import { login } from "../../redux/actions/index.js";
 import { useNavigate } from "react-router-dom";
 import { Button, FormControl, Typography, TextField } from "@mui/material";
-import logo from "../../assets/apple-touch-icon.png";
+// import logo from "../../assets/apple-touch-icon.png";
 import style from "../Login/LoginScreen.module.css";
 
 export default function LoginScreen(props) {
@@ -19,7 +19,6 @@ export default function LoginScreen(props) {
   };
 
   const dispatch = useDispatch();
-  // const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -50,7 +49,7 @@ export default function LoginScreen(props) {
     <div className={style.container}>
       <div className={style.containerForm}>
         <form className={style.form} onSubmit={submitHandler}>
-          <img src={logo} className={style.formTitle} />
+          {/* <img src={logo} className={style.formTitle} /> */}
           <div className={style.inputContainer}>
 
             <input
