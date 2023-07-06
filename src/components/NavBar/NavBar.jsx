@@ -69,7 +69,7 @@ function ResponsiveAppBar() {
               // textDecoration: 'none',
             }}
           >
-            <img src={logo} alt="no hay" />
+            <img src={logo} alt="no hay" className={styles.imagen}/>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import NavBar from '../../components/NavBar/NavBar';
 import NavBarDashboard from '../../components/NavBarDashboard/NavBarDashboard';
 // import Graficos from '../Graficos/Graficos';
-import Usuarios from '../Usuarios/Usuarios';
+import Usuarios from '../../components/Usuarios/Usuarios';
 
 const Dashboard = () => {
 

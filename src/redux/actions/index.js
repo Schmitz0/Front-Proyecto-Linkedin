@@ -11,8 +11,8 @@ export const POST_USUARIO = "POST_USUARIO";
 export const GET_INSUMO_DETALLE = "GET_INSUMO_DETALLE";
 export const PUT_INSUMO = "PUT_INSUMO";
 export const PUT_RECETA_INSUMO = "PUT_RECETA_INSUMO";
-export const PUT_USUARIO = "PUT_USUARIO"; 
-export const PUT_PROVEEDOR = "PUT_PROVEEDOR";  
+export const PUT_USUARIO = "PUT_USUARIO";
+export const PUT_PROVEEDOR = "PUT_PROVEEDOR";
 export const POST_RECETA = "POST_RECETA";
 export const POST_MOVIMIENTO_INSUMOS = "POST_MOVIMIENTO_INSUMOS";
 export const POST_MOVIMIENTO_INSUMOS_SUMA = "POST_MOVIMIENTO_INSUMOS_SUMA";
@@ -37,7 +37,7 @@ export const GET_GRAFICO_INSUMO_CANTIDAD = "GET_GRAFICO_INSUMO_CANTIDAD";
 export const GET_INSUMO_CONTROL = "GET_INSUMO_CONTROL";
 export const  POST_STOCK_HISTORIAL =" POST_STOCK_HISTORIAL"
 
-const app = "https://back-proyect-linkedin-production.up.railway.app";
+const app = "https://api-esencial-production.up.railway.app";
 // const app = "http://localhost:3001";
 
 // const token = localStorage.getItem('token');

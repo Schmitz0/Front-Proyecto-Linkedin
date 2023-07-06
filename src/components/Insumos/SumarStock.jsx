@@ -82,7 +82,6 @@ return (
                 value={input.motivo}
               />
               <TextField
-                type="number"
                 margin="dense"
                 label="Cantidad"
                 fullWidth
