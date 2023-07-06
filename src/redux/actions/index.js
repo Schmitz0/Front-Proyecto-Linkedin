@@ -6,7 +6,7 @@ export const GET_ALL_PROVEEDORES = "GET_ALL_PROVEEDORES";
 export const GET_ALL_RECETAS = "GET_ALL_RECETAS";
 export const GET_RECETA_DETALLE = "GET_RECETA_DETALLE";
 export const POST_PROVEEDOR = "POST_PROVEEDOR";
-export const POST_INSUMOS = "POST_INSUMOS"; 
+export const POST_INSUMOS = "POST_INSUMOS";
 export const POST_USUARIO = "POST_USUARIO";
 export const GET_INSUMO_DETALLE = "GET_INSUMO_DETALLE";
 export const PUT_INSUMO = "PUT_INSUMO";
@@ -25,7 +25,6 @@ export const USER_LOGIN_REQUEST = "USER_LOGIN_REQUEST";
 export const USER_LOGIN_SUCCESS = "USER_LOGIN_SUCCESS";
 export const USER_LOGIN_FAIL = "USER_LOGIN_FAIL";
 export const USER_LOGOUT = "USER_LOGOUT";
-// export const USER_SIGNIN = 'USER_SIGNIN';
 export const GET_ALL_MOVIMIENTO = "GET_ALL_MOVIMIENTO";
 export const POST_ALL_MOVIMIENTOS = "POST_ALL_MOVIMIENTOS";
 export const GET_STOCK_PRICE = "GET_STOCK_PRICE";
@@ -35,7 +34,8 @@ export const GET_NULL = "GET_NULL";
 export const SET_NAV_BAR = "SET_NAV_BAR";
 export const GET_GRAFICO_INSUMO_CANTIDAD = "GET_GRAFICO_INSUMO_CANTIDAD";
 export const GET_INSUMO_CONTROL = "GET_INSUMO_CONTROL";
-export const  POST_STOCK_HISTORIAL =" POST_STOCK_HISTORIAL"
+export const POST_STOCK_HISTORIAL = "POST_STOCK_HISTORIAL"
+export const POST_REGISTRO_USUARIO = "POST_REGISTRO_USUARIO"
 
 const app = "https://back-proyect-linkedin-production.up.railway.app";
 // const app = "http://localhost:3001";
@@ -51,9 +51,17 @@ axios.interceptors.request.use(
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`; // Agrega el token en el encabezado
     }
+    const id = localStorage.getItem("id"); // Obtén el usuario de tu almacenamiento (puedes ajustarlo según tu implementación)
+    const email = localStorage.getItem("email"); // Obtén el usuario de tu almacenamiento (puedes ajustarlo según tu implementación)
     const name = localStorage.getItem("name"); // Obtén el usuario de tu almacenamiento (puedes ajustarlo según tu implementación)
+    if (email) {
+      config.headers["Email"] = email; // Agrega el usuario en el encabezado o cuerpo de la solicitud
+    }
     if (name) {
       config.headers["Name"] = name; // Agrega el usuario en el encabezado o cuerpo de la solicitud
+    }
+    if (id) {
+      config.headers["UserId"] = id; // Agrega el usuario en el encabezado o cuerpo de la solicitud
     }
     return config;
   },
@@ -275,11 +283,22 @@ export const deleteInsumo = (id) => {
   };
 };
 
+export const deleteProveedor = (id) => {
+  return async function () {
+    try {
+      await axios.delete(`${app}/proveedor/${id}`);
+      return "Gracias";
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
 export const deleteInsumoReceta = (id, rowId) => {
 
   return async function () {
     try {
-      await axios.delete(`${app}/receta/${id}`, { data: { insumoId: rowId } });
+      await axios.delete(`${app}/receta/insumo/${id}`, { data: { insumoId: rowId } });
       return "Gracias";
     } catch (error) {
       console.log(error);
@@ -348,6 +367,7 @@ export const login = (email, password) => async (dispatch) => {
       email,
       password,
     });
+    localStorage.setItem("id", data.id);
     localStorage.setItem("token", data.token);
     localStorage.setItem("name", data.name);
     localStorage.setItem("email", data.email);
@@ -420,6 +440,17 @@ export const postAllMovimientos = (values) => {
     try {
       const response = await axios.post(`${app}/movimiento/filters`, values);
       dispatch({ type: POST_ALL_MOVIMIENTOS, payload: response.data });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const postRegistroUsuario = ( id ) => {
+  return async function (dispatch) {
+    try {
+      const response = await axios.post(`${app}/usuario/registro/${id}`);
+      dispatch({ type: POST_REGISTRO_USUARIO, payload: response.data })
     } catch (error) {
       console.log(error);
     }

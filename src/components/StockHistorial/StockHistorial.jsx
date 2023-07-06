@@ -2,40 +2,9 @@ import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import {
-  deleteMovimiento,
-  getAllInsumos,
-  getAllMovimientos,
-  postAllMovimientos,
-  postStockHistorial,
-  postControlInsumo,
-} from "../../redux/actions";
-import {
-  FormControl,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  TextField,
-  OutlinedInput,
-  MenuItem,
-  Box,
-  InputAdornment,
-  Collapse,
-  IconButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  tableCellClasses,
-  TableRow,
-  Typography,
-  Paper,
-  Button,
-  Select,
-} from "@mui/material";
+import { deleteMovimiento, getAllInsumos, getAllMovimientos, postAllMovimientos, postStockHistorial, postControlInsumo, getAllUsuarios } from "../../redux/actions";
+import { FormControl, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, OutlinedInput, MenuItem, Box, InputAdornment, Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, tableCellClasses, TableRow, Typography, Paper, Button, Select } from "@mui/material";
+import style from "../StockHistorial/StockHistorial.module.css"
 import moment from "moment-timezone";
 import NavBar from "../../components/NavBar/NavBar";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -58,20 +27,29 @@ const useStyles = makeStyles((theme) => ({
       filter: "invert(1)",
     },
   },
+  checkButton: {
+    backgroundColor: '#f2f2f2',
+    display: 'flex',
+    justifyContent: 'center',
+  },
 }));
 
 function Row({ row }) {
+  const classes = useStyles();
+  const usuarios = useSelector((state)=>state.usuarios)
+  // console.log(usuarios);
   const insumos = row.Insumos || [];
-  console.log(insumos);
+  // console.log(insumos);
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
+  const [movimientos, setMovimientos] = React.useState([]);
   const [selectedInsumo, setSelectedInsumo] = React.useState({
     id: null,
     nombre: "",
     stockFinal: "",
   });
 
-  console.log(selectedInsumo);
+  // console.log(selectedInsumo);
   const [isMobile, setIsMobile] = React.useState(false);
 
   const dispatch = useDispatch();
@@ -80,6 +58,10 @@ function Row({ row }) {
   const handleClickOpen2 = (insumo, InsumoId) => {
     setSelectedInsumo({ id: InsumoId, nombre: insumo.nombre, stockFinal: "" });
     setOpen2(true);
+  };
+  const actualizarMovimientos = async () => {
+    const response = await dispatch(getAllMovimientos({ estado: false }));
+    setMovimientos(response);
   };
 
   const handleClose2 = () => {
@@ -132,6 +114,9 @@ function Row({ row }) {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+  useEffect(() => {
+    actualizarMovimientos();
+  }, []);
 
   const handlerClickDelete = (e) => {
     swal({
@@ -160,10 +145,11 @@ function Row({ row }) {
 
     return isNaN(cleanValue) ? 0 : cleanValue;
   };
-  const handleClickSuccess = (event) => {
+  const handleClickSuccess = async (event) => {
     const { id } = row;
-    dispatch(postStockHistorial(id));
-    navigate(`/movimientos`);
+    await dispatch(postStockHistorial(id));
+    await actualizarMovimientos();
+    navigate('/movimientos');
   };
 
   return (
@@ -173,8 +159,8 @@ function Row({ row }) {
           "& > *": { borderBottom: "unset" },
           display: { xs: "none", md: "contents" },
         }}
-      >
-        <TableCell>
+      >         
+        <TableCell  sx={{ backgroundColor: "#f2f2f2" }} >
           <IconButton
             aria-label="expand row"
             size="small"
@@ -207,13 +193,13 @@ function Row({ row }) {
             .format("DD/MM/YYYY")}
         </TableCell>
         <TableCell sx={{ backgroundColor: "#f2f2f2" }} align="center">
-          {row.usuario}
+        {usuarios.filter((usuario) => usuario.id === row.usuario)[0]?.name || ""}
         </TableCell>
-        <TableCell
+        <TableCell  className={classes.checkButton}
           style={{
             display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
+            justifyContent: "center",         
+            
           }}
         >
           <IconButton
@@ -260,19 +246,11 @@ function Row({ row }) {
 
         <TableCell align="center">{row.tipoDeMovimiento}</TableCell>
         <TableCell align="center">{Number(row.cantidadProducida)}</TableCell>
-        {/* <TableCell align="center">{row.motivo}</TableCell> */}
         <TableCell align="center">
           {moment
             .tz(row.createdAt, "America/Argentina/Buenos_Aires")
             .format("DD/MM/YYYY")}
         </TableCell>
-        {/* <TableCell align="center">{row.usuario}</TableCell> */}
-
-        {/* <TableCell align="center">
-          <IconButton onClick={() => handlerClickDelete(row.id)}>
-            <DeleteIcon sx={{ color: "blue" }} />
-          </IconButton>
-        </TableCell> */}
       </TableRow>
 
       <TableRow>
@@ -337,9 +315,7 @@ function Row({ row }) {
                 <TableBody>
                   {insumos?.map((insumo, index) => (
                     <TableRow key={index}>
-                      <TableCell
-                       align="center"
-                      >
+                      <TableCell align="center">
                         {insumo.id}
                       </TableCell>
                       <TableCell align="center">{insumo.nombre}</TableCell>
@@ -444,7 +420,7 @@ export default function CollapsibleTable() {
   }));
 
   const rows = useSelector((state) => state.movimientos);
-  console.log(rows);
+  // console.log(rows);
   const movis = ["Control de stock", "Movimiento de insumo", "Receta"];
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
@@ -477,6 +453,7 @@ export default function CollapsibleTable() {
 
   useEffect(() => {
     dispatch(getAllInsumos());
+    dispatch(getAllUsuarios());
     if (!pageLoaded) {
       dispatch(getAllMovimientos({ estado: false }));
       setPageLoaded(true);
@@ -605,6 +582,7 @@ export default function CollapsibleTable() {
               label="Fecha Minima"
               type="date"
               InputLabelProps={{ shrink: true }}
+              className={style.customTextfield}
               variant="outlined"
               value={
                 filter.filters.fechaMin
@@ -638,6 +616,7 @@ export default function CollapsibleTable() {
               label="Fecha Maxima"
               type="date"
               InputLabelProps={{ shrink: true }}
+              className={style.customTextfield}
               variant="outlined"
               value={
                 filter.filters.fechaMax
