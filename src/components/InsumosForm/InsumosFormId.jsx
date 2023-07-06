@@ -1,23 +1,14 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import { getAllProveedores, getInsumoDetalle, putInsumo } from '../../redux/actions';
 import NavBar from '../NavBar/NavBar';
 import style from '../InsumosForm/InsumosForm.module.css';
-import { useNavigate, useParams } from 'react-router-dom';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-import {
-  OutlinedInput,
-  Button,
-  TextField,
-  Select,
-  MenuItem,
-  Box,
-  Typography,
-  FormControl,
-  InputLabel,
-} from '@mui/material';
+import { OutlinedInput, Button, TextField, Select, MenuItem, Box, Typography, FormControl } from '@mui/material';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -49,6 +40,7 @@ const InsumosForm = () => {
   const insumosGlobal = useSelector((state) => state.insumos);
   const insumoDetalle = useSelector((state)=>state.insumoDetalle)
   const proveedoresGlobal = useSelector((state) => state.proveedores);
+ 
   
   const categoria = insumosGlobal.map((e) => e.categoria);
   const categorias = [...new Set(categoria)];
@@ -80,10 +72,10 @@ const InsumosForm = () => {
     precio: insumoDetalle?.precio,
     stock: insumoDetalle?.stock,
     stockCritico:insumoDetalle?.stockCritico,
-    categoria: ``,
-    unidad: ``,
+    categoria: insumoDetalle?.categoria,
+    unidad: insumoDetalle?.unidad,
     descripcion: insumoDetalle?.descripcion,
-    proveedor: ``,
+    proveedor: "",
     imagen: insumoDetalle?.imgUrl,
   })
 } 
@@ -120,9 +112,16 @@ setLoading(false)
                 :(
         <div>
           <NavBar />
+
+          <Link to={'/insumos'} style={{ textDecoration: 'none' }}>
+            <Button>
+              <ArrowBackIcon /> Atrás 
+            </Button>
+          </Link> 
+
           <form onSubmit={HandleSubmit}>
             <FormControl sx={{ m: 1.5, alignItems: 'center' }}>
-              <div>
+              {/* <div>
                 <Typography
                   textAlign="center"
                   sx={{
@@ -136,10 +135,9 @@ setLoading(false)
                   >
                   Editar todos los campos
                 </Typography>
-              </div>
+              </div> */}
               <div className={style.selectContainer}>
                 <Box>
-
                   <TextField
                     sx={{ m: 1, width: 300 }}
                     required
@@ -153,6 +151,7 @@ setLoading(false)
                   <TextField
                     sx={{ m: 1, width: 300 }}
                     required
+                    inputProps={{ min: 0 }}
                     name="precio"
                     type='number'
                     variant="outlined"
@@ -164,6 +163,7 @@ setLoading(false)
                   <TextField
                     sx={{ m: 1, width: 300 }}
                     required
+                    inputProps={{ min: 0 }}
                     name="stock"
                     type='number'
                     variant="outlined"
@@ -171,9 +171,10 @@ setLoading(false)
                     onChange={handleChange}
                     value={input.stock}                    
                     />
-                       <TextField
+                    <TextField
                     sx={{ m: 1, width: 300 }}
                     required
+                    inputProps={{ min: 0 }}
                     name="stockCritico"
                     type='number'
                     variant="outlined"
@@ -184,7 +185,7 @@ setLoading(false)
 
                   <FormControl>
                     <Select
-                      sx={{ m: 1, width: 300, height: 67 }}
+                      sx={{ m: 1, width: 300 }}
                       displayEmpty
                       name="categoria"
                       label="Categoria"
@@ -207,7 +208,7 @@ setLoading(false)
 
                   <FormControl>
                     <Select
-                      sx={{ m: 1, width: 300, height: 67 }}
+                      sx={{ m: 1, width: 300 }}
                       displayEmpty
                       name="unidad"
                       value={input.unidad}
@@ -233,15 +234,14 @@ setLoading(false)
                     name="descripcion"
                     variant="outlined"
                     label="Descripcion..."
-                    multiline
                     onChange={handleChange}
                     value={input.descripcion}
                     rows={2}
                     />
 
-			<FormControl>
+			            <FormControl>
                     <Select
-                      sx={{ m: 1, width: 300, height: 67 }}
+                      sx={{ m: 1, width: 300 }}
                       displayEmpty
                       name="proveedor"
                       value={input.proveedor}
@@ -260,7 +260,7 @@ setLoading(false)
                       ))}
                     </Select>
                   </FormControl>
-
+{/* 
                   <TextField
                     sx={{ m: 1, width: 300 }}
                     required
@@ -269,7 +269,7 @@ setLoading(false)
                     label="Imagen..."
                     onChange={handleChange}
                     value={input.imagen}                    
-                    />
+                    /> */}
                 </Box>
               </div>
 

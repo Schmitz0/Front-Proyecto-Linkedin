@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styles from '../NavBar/NavBar.module.css';
 import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Button, MenuItem, } from '@mui/material/';
 import MenuIcon from '@mui/icons-material/Menu';
-import logo from '../../assets/android-chrome-512x512.png';
+import logo from '../../assets/logo.png';
 import UserStatus from '../UserStatus/UserStatus';
 import { Buffer } from 'buffer';
 
@@ -51,7 +51,7 @@ function ResponsiveAppBar() {
       sx={{ display: "flex", alignItems: "center", justifyContent:'space-between' }}
       >
 
-        <Toolbar className={styles.toolBar} 
+        <Toolbar  className={styles.toolBar} 
         
         disableGutters>
           <Typography

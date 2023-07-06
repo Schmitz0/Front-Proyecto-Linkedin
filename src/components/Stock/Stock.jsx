@@ -46,6 +46,9 @@ const Stock = () => {
     },
   };
 
+    const [submitted, setSubmitted] = useState(false);
+  const [areAllFieldsComplete, setAreAllFieldsComplete] = useState(false);
+
   const [controlStock, setControlStock] = useState({
     tipoDeMovimiento: "Control de stock",
     motivo: "",
@@ -91,11 +94,21 @@ const Stock = () => {
         ...insumo,
         [event.target.name]: number,
       });
+      const { motivo } = controlStock;
+      const { cantidad, id } = insumo;
+      const fieldsComplete = motivo.trim() !== '' && cantidad.trim() !== '' && id.trim() !== '';
+      setAreAllFieldsComplete(fieldsComplete);
     }
   };
 
   const handlerClick = (e) => {
     e.preventDefault();
+  setSubmitted(true);
+  if (insumo.nombre === "" || insumo.id === "" || insumo.cantidad === "") {
+      console.log('No se pueden procesar los datos debido a campos incompletos.');
+      return;
+    }
+    if (insumo){
     const nuevoControlInsumo = {
       id: insumo.id,
       nombre: insumo.nombre,
@@ -107,6 +120,7 @@ const Stock = () => {
       nombre: "",
       cantidad: "",
     });
+  }
   };
   const HandleSubmit = async (e) => {
     e.preventDefault();
@@ -169,6 +183,8 @@ const Stock = () => {
                 label="Motivo del control de stock..."
                 onChange={handleChange}
                 value={controlStock.motivo}
+                 error={submitted && controlStock.motivo === ''}
+                  helperText={submitted && controlStock.motivo === '' ? 'Este campo es requerido' : ''}
               />
               <Select
                 sx={{ m: 1, width: 350 }}
@@ -179,6 +195,8 @@ const Stock = () => {
                 input={<OutlinedInput />}
                 MenuProps={MenuProps}
                 inputProps={{ "aria-label": "Without label" }}
+                 error={submitted && insumo.id === ''}
+                  helperText={submitted && insumo.id === '' ? 'Este campo es requerido' : ''}
               >
                 <MenuItem disabled value="">
                   <span>Nombre Insumo</span>
@@ -200,13 +218,15 @@ const Stock = () => {
                 onChange={handleChange2}
                 value={insumo.cantidad}
                 inputProps={{ min: 0 }}
+                error={submitted && insumo.cantidad === ''}
+                  helperText={submitted && insumo.cantidad === '' ? 'Este campo es requerido' : ''}
               />
             </div>
 
             <br />
 
             <Button
-              disabled={!insumo.nombre || !insumo.cantidad}
+              // disabled={!insumo.nombre || !insumo.cantidad}
               onClick={handlerClick}
               sx={{
                 paddingRight: "25px",

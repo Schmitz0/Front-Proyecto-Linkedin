@@ -2,35 +2,12 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "@emotion/react";
-import {
-  getAllInsumos,
-  getAllProveedores,
-  getInsumoDetalle,
-  postRemito,
-} from "../../redux/actions";
-import {
-  TableCell,
-  TableRow,
-  TableHead,
-  Table,
-  Paper,
-  TableContainer,
-  TableBody,
-} from "@mui/material";
+import { getAllInsumos, getAllProveedores, getInsumoDetalle, postRemito } from "../../redux/actions";
+import { TableCell, TableRow, TableHead, Table, Paper, TableContainer, TableBody } from "@mui/material";
 import NavBar from "../NavBar/NavBar";
 import style from "./FormRemitoDetalle.module.css";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  OutlinedInput,
-  Button,
-  TextField,
-  Select,
-  MenuItem,
-  Box,
-  Typography,
-  FormControl,
-  InputLabel,
-} from "@mui/material";
+import { OutlinedInput, Button, TextField, Select, MenuItem, Box, Typography, FormControl } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { format } from "date-fns";
 
@@ -77,6 +54,9 @@ const FormReceta = () => {
   const unidades = [...new Set(unidad)];
 
   const proveedores = proveedoresGlobal.map((e) => e.nombre);
+
+  const [submitted, setSubmitted] = useState(false);
+  const [areAllFieldsComplete, setAreAllFieldsComplete] = useState(false);
 
   const [input, setInput] = useState({
     proveedorId: "",
@@ -134,25 +114,36 @@ const FormReceta = () => {
     } else if (event.target.name === "fecha") {
       const dateValue = event.target.value;
       const [year, month, day] = dateValue.split("-");
-      const selectedDate = new Date(year, month - 1, day); // Crear un objeto Date con la fecha seleccionada
+      const selectedDate = new Date(year, month - 1, day); 
 
       setInput({
         ...input,
-        fecha: format(selectedDate, "dd/MM/yyyy"), // Formatear la fecha como "dd/MM/yyyy" y almacenarla en el estado input.fecha
+        fecha: format(selectedDate, "dd/MM/yyyy"), 
       });
-      setSelectedDate(selectedDate); // Almacenar la fecha seleccionada en el nuevo estado selectedDate
+      setSelectedDate(selectedDate); 
     } else {
       setInput({
         ...input,
         [event.target.name]: event.target.value,
       });
+      
+      const {id, cantidad, precio} = state
+      const { proveedorId,  numeroRemito } = input;
+      const fieldsComplete = numeroRemito.trim() !== '' && proveedorId.trim() !== '' && id.trim() !== '' && cantidad.trim() !== '' && precio.trim() !== '';
+      setAreAllFieldsComplete(fieldsComplete);
     }
   };
 
   const handlerClick = async (e) => {
     e.preventDefault();
+    setSubmitted(true);
+  
+    if (state.nombre === "" || state.cantidad === "" || state.precio === "") {
+      console.log('No se pueden procesar los datos debido a campos incompletos.');
+      return;
+    }
+  
     input.insumos.push(state);
-
     setState({
       id: "",
       nombre: "",
@@ -160,7 +151,6 @@ const FormReceta = () => {
       precio: "",
     });
   };
-
   const HandleSubmit = async (e) => {
     e.preventDefault();
     // dispatch(postRemito(input));
@@ -191,8 +181,9 @@ const FormReceta = () => {
           <NavBar />
           <form onSubmit={HandleSubmit}>
             <FormControl sx={{ m: 1.5, alignItems: "center" }}>
-              <div>
-                <Typography
+              
+              <div className={style.selectContainer}>
+                {/* <Typography
                   textAlign="center"
                   sx={{
                     m: 2,
@@ -204,9 +195,7 @@ const FormReceta = () => {
                   }}
                 >
                   Ingresar remito
-                </Typography>
-              </div>
-              <div className={style.selectContainer}>
+                </Typography> */}
                 <Box>
                   <TextField
                     sx={{ m: 1, width: 300 }}
@@ -219,6 +208,8 @@ const FormReceta = () => {
                     label="Numero de Remito"
                     onChange={handleChange}
                     value={input.numeroRemito}
+                    error={submitted && input.numeroRemito === ''}
+                    helperText={submitted && input.numeroRemito === '' ? 'Este campo es requerido' : ''}
                   />
 
                   <FormControl name="nombre" value={input.proveedorId}>
@@ -231,6 +222,8 @@ const FormReceta = () => {
                       input={<OutlinedInput />}
                       MenuProps={MenuProps}
                       inputProps={{ "aria-label": "Without label" }}
+                      error={submitted && input.proveedorId === ''}
+                      helperText={submitted && input.proveedorId === '' ? 'Este campo es requerido' : ''}
                     >
                       <MenuItem disabled value="">
                         <span>Nombre Proveedor</span>
@@ -251,6 +244,7 @@ const FormReceta = () => {
                     type="date"
                     variant="outlined"
                     placeholder="Fecha de carga..."
+                    className={style.customTextfield}
                     onChange={handleChange}
                     value={
                       selectedDate ? format(selectedDate, "yyyy-MM-dd") : ""
@@ -258,6 +252,8 @@ const FormReceta = () => {
                     InputLabelProps={{
                       shrink: selectedDate !== null, // Encoger la etiqueta si hay una fecha seleccionada
                     }}
+                   
+                   
                   />
                   <FormControl name="nombre" value={state.nombre}>
                     <Select
@@ -269,6 +265,8 @@ const FormReceta = () => {
                       input={<OutlinedInput />}
                       MenuProps={MenuProps}
                       inputProps={{ "aria-label": "Without label" }}
+                      error={submitted && state.id === ''}
+                      helperText={submitted && state.id === '' ? 'Este campo es requerido' : ''}
                     >
                       <MenuItem disabled value="">
                         <span>Nombre del insumo</span>
@@ -291,6 +289,8 @@ const FormReceta = () => {
                     label="Cantidad"
                     onChange={handleChange2}
                     value={state.cantidad}
+                    error={submitted && state.cantidad === ''}
+                      helperText={submitted && state.cantidad === '' ? 'Este campo es requerido' : ''}
                   />
 
                   <TextField
@@ -303,15 +303,17 @@ const FormReceta = () => {
                     label="Precio"
                     onChange={handleChange2}
                     value={state.precio}
+                    error={submitted && state.precio === ''}
+                      helperText={submitted && state.precio === '' ? 'Este campo es requerido' : ''}
                   />
                 </Box>
               </div>
 
               <Button
                 className={style.boton}
-                disabled={
-                  !state.id || !state.nombre || !state.cantidad || !state.precio
-                }
+                // disabled={
+                //   !state.id || !state.nombre || !state.cantidad || !state.precio
+                // }
                 onClick={handlerClick}
                 sx={{
                   paddingRight: "25px",
