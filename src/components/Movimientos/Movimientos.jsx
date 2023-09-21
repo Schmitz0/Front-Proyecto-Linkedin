@@ -128,7 +128,7 @@ function Row({ row }) {
 </TableCell>
         <TableCell sx={{ backgroundColor: "#f2f2f2" }} align="center">
           <IconButton onClick={() => handlerClickDelete(row.id)}>
-            <DeleteIcon sx={{ color: "blue" }} />
+            <DeleteIcon sx={{ color: "red" }} />
           </IconButton>
         </TableCell>
       </TableRow>
